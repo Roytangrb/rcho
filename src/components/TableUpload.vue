@@ -1,13 +1,24 @@
 <template>
 	<v-container>
 		<v-row>
-			<v-col sm="12" md="6">
+			<v-col cols="12" md="6">
+				<v-select
+					label="Template"
+					:items="templates"
+					v-model="template"
+					item-text="label"
+          item-value="value"
+          :clearable="true"
+				>
+				</v-select>
+			</v-col>
+			<v-col cols="12" md="6">
 				<v-file-input
 					label="Click or drag file to upload"
-					:hint="hint"
+					:hint="hint_file"
 					prepend-icon="mdi-file-excel-outline"
 					accept=".xlsx,.csv"
-
+					:disabled="!template"
 					v-on:drop="handleDrop"
 				>
 				</v-file-input>
@@ -22,7 +33,11 @@
 	export default {
 		name: 'TableUpload',
 		data: () => ({
-			hint: "Only accepts .xlxs .csv"
+			hint_file: "Only accepts .xlxs .csv",
+			templates: [
+				{ label: '酷家樂', value: 'kujiale' },
+			],
+			template: null,
 		}),
 		methods: {
 			handleDrop(e) {

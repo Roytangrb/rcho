@@ -17,21 +17,21 @@
 
       <template v-slot:extension>
         <v-tabs
-          v-model="tab"
+          v-model="curr_tab"
           centered
         >
           <v-tab
-            v-for="(tab, i) in tabs"
-            :key="i"
+            v-for="tab in tabs"
+            :key="tab.id"
           >
-            {{ tab }}
+            {{ tab.name }}
           </v-tab>
         </v-tabs>
       </template>
     </v-app-bar>
 
     <v-content>
-      <v-tabs-items v-model="tab">
+      <v-tabs-items v-model="curr_tab">
         <v-tab-item>
           <TableUpload />
         </v-tab-item>
@@ -55,11 +55,18 @@ export default {
   },
   data: () => ({
     lang: "CN",
-    tabs: ["Upload", "Manual"],
-    tab: "Manual",
+    tabs: [
+      { id: 1, name: 'Upload' },
+      { id: 2, name: 'Manual' }
+    ],
+    curr_tab: 0,
   }),
   methods: {
 
   }
 };
 </script>
+
+<style lang="less">
+  
+</style>

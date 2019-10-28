@@ -2,35 +2,64 @@
   <v-app>
     <v-app-bar app>
       <v-toolbar-title class="headline text-uppercase">
-        <span>Vuetify</span>
-        <span class="font-weight-light">MATERIAL DESIGN</span>
+        <span>醛微計算器</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn
-        text
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
+      <v-btn-toggle
+        v-model="lang"
+        dense
+        tile
+        group
       >
-        <span class="mr-2">Latest Release</span>
-      </v-btn>
+        <v-btn value="CN">中</v-btn>
+        <v-btn value="EN">EN</v-btn>
+      </v-btn-toggle>
+
+      <template v-slot:extension>
+        <v-tabs
+          v-model="tab"
+          centered
+        >
+          <v-tab
+            v-for="(tab, i) in tabs"
+            :key="i"
+          >
+            {{ tab }}
+          </v-tab>
+        </v-tabs>
+      </template>
     </v-app-bar>
 
     <v-content>
-      <HelloWorld/>
+      <v-tabs-items v-model="tab">
+        <v-tab-item>
+          <TableUpload />
+        </v-tab-item>
+        <v-tab-item>
+          <Form />
+        </v-tab-item>
+      </v-tabs-items>
     </v-content>
   </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld';
+import TableUpload from './components/TableUpload.vue'
+import Form from './components/ManualForm.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld,
+    TableUpload,
+    Form
   },
   data: () => ({
-    //
+    lang: "CN",
+    tabs: ["Upload", "Manual"],
+    tab: "Manual",
   }),
+  methods: {
+
+  }
 };
 </script>

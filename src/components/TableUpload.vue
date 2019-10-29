@@ -11,17 +11,31 @@
           :clearable="true"
 				>
 				</v-select>
-			</v-col>
-			<v-col cols="12" md="6">
+
 				<v-file-input
-					label="Click or drag file to upload"
+					label="Click to upload"
 					:hint="hint_file"
 					prepend-icon="mdi-file-excel-outline"
 					accept=".xlsx,.csv"
 					:disabled="!template"
-					v-on:drop="handleDrop"
+					@change="drop"
 				>
 				</v-file-input>
+
+				<p class="text-center">Or</p>
+
+				<div 
+					class="drop-zone"
+					@drop.stop.prevent="drop"
+					@dragover.prevent="dragover"
+				>
+					<v-icon>mdi-database-import</v-icon>
+					<span>Drop a sheet file here...</span>
+				</div>
+
+			</v-col>
+			<v-col cols="12" md="6">
+				
 			</v-col>
 		</v-row>
 	</v-container>
@@ -38,14 +52,26 @@
 				{ label: '酷家樂', value: 'kujiale' },
 			],
 			template: null,
+			file: null,
 		}),
 		methods: {
-			handleDrop(e) {
+			drop(e) {
+				var vm = this
+
 				console.log(e)
-				e.stopPropagation()
-				e.preventDefault()
+				if (!e.dataTransfer || !e.dataTransfer.files) {
+					return 
+				}
 				var files = e.dataTransfer.files
 				var f = files[0]
+				if (!f) {
+					return 
+				}
+				vm.file = f
+
+				vm.readFile(f)
+			},
+			readFile(f){
 				var reader = new FileReader()
 				reader.onload = function(e) {
 					var data = new Uint8Array(e.target.result)
@@ -55,11 +81,29 @@
 					console.log(workbook)
 				};
 				reader.readAsArrayBuffer(f);
+			},
+			dragover(e){
+				console.log(e)
 			}
 		}
 	}
 </script>
 
 <style scoped lang="less">
+	.text-center{
+		text-align: center;
+	}
 	
+	.drop-zone{
+		width: 100%;
+		height: 300px;
+		border-radius: 5px;
+		border: 1px solid #ccc;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		font: 20px;
+		font-weight: 600;
+		color: #ccc;
+	}
 </style>

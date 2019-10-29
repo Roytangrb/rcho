@@ -4,5 +4,13 @@ module.exports = {
     : '/',
   "transpileDependencies": [
     "vuetify"
-  ]
+  ],
+  configureWebpack: {
+  	resolve: {
+      modules: ['node_modules'],
+      alias: {
+        'xlsx': 'xlsx/dist/xlsx.mini.min.js',
+      }
+  	},
+  }
 }

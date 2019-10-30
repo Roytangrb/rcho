@@ -15,7 +15,7 @@
 				<v-file-input
 					label="Click to upload"
 					:hint="hint_file"
-					prepend-icon="mdi-file-excel-outline"
+					:prepend-icon="icons.excel"
 					accept=".xlsx,.csv"
 					:disabled="!template"
 					@change="drop"
@@ -29,7 +29,7 @@
 					@drop.stop.prevent="drop"
 					@dragover.prevent="dragover"
 				>
-					<v-icon>mdi-database-import</v-icon>
+					<v-icon>{{ icons.import }}</v-icon>
 					<span>Drop a sheet file here...</span>
 				</div>
 
@@ -44,6 +44,8 @@
 <script>
 	import XLSX from 'xlsx'
 
+	import { mdiDatabaseImport, mdiFileExcelOutline} from '@mdi/js'
+
 	export default {
 		name: 'TableUpload',
 		data: () => ({
@@ -53,6 +55,11 @@
 			],
 			template: null,
 			file: null,
+
+			icons: {
+				import: mdiDatabaseImport,
+				excel: mdiFileExcelOutline,
+			}
 		}),
 		methods: {
 			drop(e) {

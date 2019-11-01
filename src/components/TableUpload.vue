@@ -96,11 +96,7 @@
 	}
 </script>
 
-<style scoped lang="less">
-	.text-center{
-		text-align: center;
-	}
-	
+<style scoped lang="less">	
 	.drop-zone{
 		width: 100%;
 		height: 300px;

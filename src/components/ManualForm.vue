@@ -8,67 +8,71 @@
         <v-list-item-title>Room: {{ room_name || ' - ' }}</v-list-item-title>
       </template>
 
-      <v-form ref="room-form" v-model="room_valid">
-        <v-row>
-          <v-col>
-            <v-text-field
-                v-model="room_name"
-                label="Room name"
-                type="text"
-              ></v-text-field>
-          </v-col>
-        </v-row>
+      <v-list-item>
+        <v-list-item-content>
+          <v-form ref="room-form" v-model="room_valid">
+            <v-row>
+              <v-col>
+                <v-text-field
+                    v-model="room_name"
+                    label="Room name"
+                    type="text"
+                  ></v-text-field>
+              </v-col>
+            </v-row>
 
-        <v-row> 
-          <v-col
-            cols="12"
-            md="4"
-          >
-            <v-text-field
-              v-model="width"
-              :rules="num_rules"
-              label="Width"
-              suffix="m"
-              type="number"
-              required
-            ></v-text-field>
-          </v-col>
+            <v-row> 
+              <v-col
+                cols="12"
+                md="4"
+              >
+                <v-text-field
+                  v-model="width"
+                  :rules="num_rules"
+                  label="Width"
+                  suffix="m"
+                  type="number"
+                  required
+                ></v-text-field>
+              </v-col>
 
-          <v-col
-            cols="12"
-            md="4"
-          >
-            <v-text-field
-              v-model="depth"
-              :rules="num_rules"
-              label="Depth"
-              suffix="m"
-              type="number"
-              required
-            ></v-text-field>
-          </v-col>
+              <v-col
+                cols="12"
+                md="4"
+              >
+                <v-text-field
+                  v-model="depth"
+                  :rules="num_rules"
+                  label="Depth"
+                  suffix="m"
+                  type="number"
+                  required
+                ></v-text-field>
+              </v-col>
 
-          <v-col
-            cols="12"
-            md="4"
-          >
-            <v-text-field
-              v-model="height"
-              :rules="num_rules"
-              label="Height"
-              suffix="m"
-              type="number"
-              required
-            ></v-text-field>
-          </v-col>
-        </v-row>
-      </v-form>
-
-      <h2 v-if="room_valid">體積 : 使用面積 ({{ format(width * depth) }} m²) x 層高 ({{ format(height) }} m) = ({{ format(width * depth * height) }} m³)</h2>
+              <v-col
+                cols="12"
+                md="4"
+              >
+                <v-text-field
+                  v-model="height"
+                  :rules="num_rules"
+                  label="Height"
+                  suffix="m"
+                  type="number"
+                  required
+                ></v-text-field>
+              </v-col>
+            </v-row>
+          </v-form>
+          
+          <h3 v-if="room_valid">體積 : 使用面積 ({{ format(width * depth) }} m²) x 層高 ({{ format(height) }} m) = ({{ format(width * depth * height) }} m³)</h3>
+        </v-list-item-content>
+      </v-list-item>
 
       <v-list-group
-        sub-group no-action
-        :append-icon="icons.wall"
+        sub-group
+        :prepend-icon="icons.wall"
         value="false"
       >
         <template v-slot:activator>

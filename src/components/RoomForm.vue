@@ -9,6 +9,9 @@
 
     <v-list-item>
       <v-list-item-content>
+      	<div class="text-right">
+      		<v-icon>{{ icons.trash }}</v-icon>
+      	</div>
         <v-form ref="room-form" v-model="room_valid">
           <v-row>
             <v-col>
@@ -71,57 +74,64 @@
 
     <v-list-group
       sub-group
-      :prepend-icon="icons.wall"
       :value="room_valid"
     >
       <template v-slot:activator>
-        <v-list-item-content>
-          <v-list-item-title>Materials</v-list-item-title>
-        </v-list-item-content>
+				<v-list-item-title>Materials</v-list-item-title>
+				<v-list-item-icon>
+					<v-icon>{{ icons.wall }}</v-icon>
+				</v-list-item-icon>
       </template>
 
       <v-list-item v-for="(item, index) in items" :key="index">
-        <v-row>
-          <v-col cols="12" md="4">
-            <v-text-field
-                v-model="item.name"
-                label="Name"
-                type="text"
-              >
-            </v-text-field>
-          </v-col>
-          <v-col cols="12" md="4">
-            <v-text-field
-                v-model="item.factor"
-                :rules="num_rules"
-                label="Factor A"
-                type="number"
-                required
-              >
-            </v-text-field>
-          </v-col>
-          <v-col cols="12" md="4">
-            <v-text-field
-                v-model="item.area"
-                :rules="num_rules"
-                label="Area"
-                type="number"
-                suffix="m²"
-                required
-              >
-            </v-text-field>
-          </v-col>
-        </v-row>
+				<v-list-item-content>
+					<v-list-item-title>Material: {{ item.name }}</v-list-item-title>
+					<v-row>
+					  <v-col cols="12" md="4">
+					    <v-text-field
+					        v-model="item.name"
+					        label="Name"
+					        type="text"
+					      >
+					    </v-text-field>
+					  </v-col>
+					  <v-col cols="12" md="4">
+					    <v-text-field
+					        v-model="item.factor"
+					        :rules="num_rules"
+					        label="Factor A"
+					        type="number"
+					        required
+					      >
+					    </v-text-field>
+					  </v-col>
+					  <v-col cols="12" md="4">
+					    <v-text-field
+					        v-model="item.area"
+					        :rules="num_rules"
+					        label="Area"
+					        type="number"
+					        suffix="m²"
+					        required
+					      >
+					    </v-text-field>
+					  </v-col>
+					</v-row>
+	      </v-list-item-content>
+	      <v-list-item-icon>
+					<v-icon @click="delMaterial(index)">{{ icons.trash }}</v-icon>
+				</v-list-item-icon>
       </v-list-item>
+
       <div class="text-right">
-        <v-btn rounded color="primary" dark @click="addMaterial">Add a material</v-btn>
+        <v-btn rounded color="secondary" dark @click="addMaterial">Add a material</v-btn>
       </div>
     </v-list-group>
   </v-list-group>
 </template>
 
 <script>
-	import { mdiDoorClosed, mdiWall} from '@mdi/js';
+	import { mdiDoorClosed, mdiWall, mdiTrashCanOutline} from '@mdi/js';
 
 	export default{
 		name: "MuaualForm",
@@ -129,6 +139,7 @@
       icons: {
         door: mdiDoorClosed,
         wall: mdiWall,
+        trash: mdiTrashCanOutline,
       },
 
       room_name: '',
@@ -148,6 +159,10 @@
       addMaterial(){
         var vm = this
         vm.items.push(vm.new_item)
+      },
+      delMaterial(index){
+      	var vm = this
+      	vm.items.splice(index, 1)
       },
       format(num){
         return Number(num).toFixed(2)

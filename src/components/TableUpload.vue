@@ -22,7 +22,9 @@
 				>
 				</v-file-input>
 
-				<p class="text-center">Or</p>
+				<div class="text-center mb-3">
+					<span class="or">Or</span>
+				</div>
 
 				<div 
 					class="drop-zone"
@@ -96,7 +98,27 @@
 	}
 </script>
 
-<style scoped lang="less">	
+<style scoped lang="less">
+	.or {
+		position: relative;
+		&::before, 
+		&::after{
+			content: "";
+			position: absolute;
+			top: 50%;
+			width: 200%;
+			border-bottom: 1px solid #ccc; 
+		}
+
+		&::before{
+			right: 130%;
+		}
+
+		&::after{
+			left: 130%;
+		}
+	}
+
 	.drop-zone{
 		width: 100%;
 		height: 300px;

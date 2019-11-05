@@ -4,7 +4,11 @@
     :value="true"
   >
     <template v-slot:activator>
-      <v-list-item-title>Room: {{ value.name || ' - ' }}</v-list-item-title>
+      <v-list-item-title>
+        <span>Room: {{ value.name || ' - ' }}</span>
+        <v-chip class="ma-2" label v-if="area">使用面積: {{ format(area) }} m²</v-chip>
+        <v-chip class="ma-2" label v-if="volume">體積: {{ format(volume) }} m³</v-chip>
+      </v-list-item-title>
     </template>
 
     <v-list-item>
@@ -66,14 +70,12 @@
               ></v-text-field>
             </v-col>
           </v-row>
-        </v-form>
-        
-        <h3 v-if="room_valid">體積 : 使用面積 ({{ format(area) }} m²) x 層高 ({{ format(value.height) }} m) = ({{ format(volume) }} m³)</h3>
+        </v-form>        
       </v-list-item-content>
     </v-list-item>
 
-    <v-list-group
-      sub-group
+    <v-list-group sub-group
+      v-if="room_valid"
       :value="room_valid"
     >
       <template v-slot:activator>
@@ -87,9 +89,8 @@
 				<v-list-item-content>
 					<v-list-item-title>
             <span>{{ index+1 }} . </span>
-            <v-chip class="ma-2" label v-if="item.material">極限散發係數: {{ item.material || ' - ' }}</v-chip>
-            <v-chip class="ma-2" label v-if="item.area">乘載率: {{ format(item.area / volume) || ' - ' }}</v-chip>
-            
+            <v-chip class="ma-2" label v-if="item.material">極限散發係數: {{ item.material }}</v-chip>
+            <v-chip class="ma-2" label v-if="item.area">乘載率: {{ format(item.area / volume) }}</v-chip>
           </v-list-item-title>
 					<v-row>
 					  <v-col cols="12" md="6">

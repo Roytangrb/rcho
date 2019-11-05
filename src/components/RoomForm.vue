@@ -89,8 +89,10 @@
 				<v-list-item-content>
 					<v-list-item-title>
             <span>{{ index+1 }} . </span>
-            <v-chip class="ma-2" label v-if="item.material">極限散發係數: {{ item.material }}</v-chip>
+            <v-chip class="ma-2" label v-if="item.material">極限散發係數: {{ format(item.material) }}</v-chip>
             <v-chip class="ma-2" label v-if="item.area">乘載率: {{ format(item.area / volume) }}</v-chip>
+            <v-chip class="ma-2" label v-if="N">N: {{ format(N) }}</v-chip>
+            <v-chip class="ma-2" label v-if="N && item.material">修正承載率: {{ format(N / item.material) }}</v-chip>
           </v-list-item-title>
 					<v-row>
 					  <v-col cols="12" md="6">
@@ -157,7 +159,6 @@
       ],
 
       room_valid: false,
-      new_item: { material: null, area: null },
 		}),
     watch: {
       value: {
@@ -175,9 +176,13 @@
       volume(){
         return Number(this.value.width) * Number(this.value.depth) * Number(this.value.height)
       },
-    },
-    mounted(){
-      console.log(this.materials)
+      N(){
+        var vm = this
+        return vm.value.items.reduce((acc, item)=>{ //房間材料承載率和
+          var weight_ratio = Number(item.area) / Number(vm.volume)
+          return acc + Number(item.material) * weight_ratio
+        }, 0)
+      }
     },
 		methods:{
       delRoom(){
@@ -187,13 +192,19 @@
       },
       addMaterial(){
         var vm = this
-        vm.value.items.push(vm.new_item)
+        vm.value.items.push({
+          material: null, 
+          area: null 
+        })
       },
       delMaterial(index){
       	var vm = this
       	vm.value.items.splice(index, 1)
       },
       format(num){
+        if (isNaN(Number(num))) {
+          return null
+        }
         return Number(num).toFixed(2)
       }
 		}

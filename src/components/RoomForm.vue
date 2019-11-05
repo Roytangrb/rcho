@@ -85,27 +85,25 @@
 
       <v-list-item v-for="(item, index) in value.items" :key="index">
 				<v-list-item-content>
-					<v-list-item-title>Material: {{ item.name }}</v-list-item-title>
+					<v-list-item-title>
+            <span>{{ index+1 }} . </span>
+            <v-chip class="ma-2" label v-if="item.material">極限散發係數: {{ item.material || ' - ' }}</v-chip>
+            <v-chip class="ma-2" label v-if="item.area">乘載率: {{ format(item.area / volume) || ' - ' }}</v-chip>
+            
+          </v-list-item-title>
 					<v-row>
-					  <v-col cols="12" md="4">
-					    <v-text-field
-					        v-model="item.name"
-					        label="Name"
-					        type="text"
-					      >
-					    </v-text-field>
+					  <v-col cols="12" md="6">
+					    <v-select
+                label="Material"
+                :items="materials"
+                v-model="item.material"
+                item-text="label"
+                item-value="value"
+                :clearable="true"
+              >
+              </v-select>
 					  </v-col>
-					  <v-col cols="12" md="4">
-					    <v-text-field
-					        v-model="item.factor"
-					        :rules="num_rules"
-					        label="Factor A"
-					        type="number"
-					        required
-					      >
-					    </v-text-field>
-					  </v-col>
-					  <v-col cols="12" md="4">
+					  <v-col cols="12" md="6">
 					    <v-text-field
 					        v-model="item.area"
 					        :rules="num_rules"
@@ -136,7 +134,8 @@
 </template>
 
 <script>
-	import { mdiDoorClosed, mdiWall, mdiTrashCanOutline} from '@mdi/js';
+	import { mdiDoorClosed, mdiWall, mdiTrashCanOutline} from '@mdi/js'
+  import materials from '../modules/materials.js'
 
 	export default{
 		name: "MuaualForm",
@@ -149,14 +148,15 @@
         wall: mdiWall,
         trash: mdiTrashCanOutline,
       },
+      materials: materials,
+      num_rules: [
+        v => !!v || 'Required',
+        v => !isNaN(Number(v)) || 'Must be a number',
+        v => Number(v) > 0 || 'Invalid numebr'
+      ],
 
       room_valid: false,
-      new_item: { name: null, factor: null, area: null },
-			num_rules: [
-				v => !!v || 'Required',
-				v => !isNaN(Number(v)) || 'Must be a number',
-				v => Number(v) > 0 || 'Invalid numebr'
-			]
+      new_item: { material: null, area: null },
 		}),
     watch: {
       value: {
@@ -173,7 +173,10 @@
       },
       volume(){
         return Number(this.value.width) * Number(this.value.depth) * Number(this.value.height)
-      }
+      },
+    },
+    mounted(){
+      console.log(this.materials)
     },
 		methods:{
       delRoom(){

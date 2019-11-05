@@ -2,7 +2,7 @@
   <v-app>
     <v-app-bar app>
       <v-toolbar-title class="headline text-uppercase">
-        <span>{{ lang == 'CN' ? '醛微計算器' : 'RCHO-V'}}</span>
+        <span>{{ lang == 'CN' ? '醛微計算器' : 'Coming Soon...'}}</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn-toggle

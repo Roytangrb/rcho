@@ -3,7 +3,7 @@
     <v-list>
       <v-list-item v-for="(room, index) in rooms" :key="index">
         <v-list-item-content>
-          <Room />
+          <Room v-model="rooms[index]" @delete="delRoom" />
         </v-list-item-content>
       </v-list-item>
     </v-list>
@@ -32,11 +32,21 @@
     methods: {
       addRoom(){
         var vm = this
+        var room_id = vm.rooms.length
 
-        vm.rooms.push({})
+        vm.rooms.push({
+          id: room_id,
+          name: null,
+          width: null,
+          depth: null,
+          height: null,
+          items: [],
+        })
       },
-      delRoom(){
+      delRoom(index){
+        var vm = this
 
+        vm.rooms.splice(index, 1)
       }
     }
   }

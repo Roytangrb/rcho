@@ -59,7 +59,7 @@ export default {
       { id: 1, name: 'Upload' },
       { id: 2, name: 'Manual' }
     ],
-    curr_tab: 0,
+    curr_tab: 1,
   }),
   methods: {
 

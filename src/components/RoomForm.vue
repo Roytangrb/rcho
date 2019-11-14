@@ -6,8 +6,8 @@
     <template v-slot:activator>
       <v-list-item-title>
         <span>Room: {{ value.name || ' - ' }}</span>
-        <v-chip class="ma-2" label v-if="area">使用面積: {{ format(area) }} m²</v-chip>
-        <v-chip class="ma-2" label v-if="volume">體積: {{ format(volume) }} m³</v-chip>
+        <v-chip class="ma-2" label v-if="area">{{ T['area'] }} : {{ format(area) }} m²</v-chip>
+        <v-chip class="ma-2" label v-if="volume">{{ T['volume'] }}: {{ format(volume) }} m³</v-chip>
       </v-list-item-title>
     </template>
 
@@ -144,32 +144,57 @@
 		name: "MuaualForm",
     props: {
       value: Object, // room obj containing room promitive data
+      lang: String,
     },
-		data: ()=>({
-      icons: {
+		data(){
+      var translation = {
+        EN: {
+          area: 'Area',
+          volume: 'Volume',
+          required: 'Required',
+          must_be_num: 'Must be a number',
+          invalid_num: 'Invalid number',
+        },
+        CN: {
+          area: '使用面積',
+          volume: '體積',
+          required: '必須填寫',
+          must_be_num: '必須為數字',
+          invalid_num: '錯誤數字輸入',
+        }
+      }
+      var icons = {
         door: mdiDoorClosed,
         wall: mdiWall,
         trash: mdiTrashCanOutline,
-      },
-      materials: materials,
-      num_rules: [
-        v => !!v || 'Required',
-        v => !isNaN(Number(v)) || 'Must be a number',
-        v => Number(v) > 0 || 'Invalid numebr'
-      ],
-
-      room_valid: false,
-		}),
+      }
+      return { 
+        room_valid: false,
+        translation,
+        icons,
+        materials,
+      }
+		},
     watch: {
       value: {
         handler(val){
-          console.log(val)
+          // console.log(val)
           this.$emit('input', val)
         },
         deep: true
       }
     },
     computed: {
+      T(){
+        return this.translation[this.lang]
+      },
+      num_rules(){
+        return [
+          v => !!v || this.T['required'],
+          v => !isNaN(Number(v)) || this.T['must_be_num'],
+          v => Number(v) > 0 || this.T['invalid_num']
+        ]
+      },
       area(){
         return Number(this.value.width) * Number(this.value.depth)
       },

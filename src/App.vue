@@ -2,7 +2,7 @@
   <v-app>
     <v-app-bar app>
       <v-toolbar-title class="headline text-uppercase">
-        <span>{{ lang == 'CN' ? '醛微計算器' : 'Coming Soon...'}}</span>
+        <span>{{ T['title'] }}</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn-toggle
@@ -10,6 +10,7 @@
         dense
         tile
         group
+        mandatory
       >
         <v-btn value="CN">中</v-btn>
         <v-btn value="EN">EN</v-btn>
@@ -24,7 +25,7 @@
             v-for="tab in tabs"
             :key="tab.id"
           >
-            {{ tab.name }}
+            {{ T[tab.name] }}
           </v-tab>
         </v-tabs>
       </template>
@@ -33,10 +34,10 @@
     <v-content>
       <v-tabs-items v-model="curr_tab">
         <v-tab-item>
-          <TableUpload />
+          <TableUpload :lang="lang" />
         </v-tab-item>
         <v-tab-item>
-          <Form />
+          <Form :lang="lang" />
         </v-tab-item>
       </v-tabs-items>
     </v-content>
@@ -53,14 +54,34 @@ export default {
     TableUpload,
     Form
   },
-  data: () => ({
-    lang: "CN",
-    tabs: [
-      { id: 1, name: 'Upload' },
-      { id: 2, name: 'Manual' }
-    ],
-    curr_tab: 1,
-  }),
+  computed: {
+    T(){
+      return this.translation[this.lang]
+    }
+  },
+  data(){
+    var translation = {
+      EN: {
+        title: 'Coming Soon...',
+        upload: 'Read Excel',
+        manual: 'Manual',
+      },
+      CN: {
+        title: '醛微計算器',
+        upload: '讀取試算表',
+        manual: '輸入計算'
+      }
+    }
+    return {
+      lang: 'CN',
+      tabs: [
+        { id: 1, name: 'upload' },
+        { id: 2, name: 'manual' }
+      ],
+      curr_tab: 1,
+      translation,
+    }
+  },
   methods: {
 
   }

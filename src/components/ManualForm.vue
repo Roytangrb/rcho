@@ -3,13 +3,13 @@
     <v-list>
       <v-list-item v-for="(room, index) in rooms" :key="index">
         <v-list-item-content>
-          <Room v-model="rooms[index]" @delete="delRoom" />
+          <Room v-model="rooms[index]" @delete="delRoom" :lang="lang"/>
         </v-list-item-content>
       </v-list-item>
     </v-list>
 
     <div class="text-center">
-      <v-btn rounded color="primary" dark @click="addRoom">Add a room</v-btn>
+      <v-btn rounded color="primary" dark @click="addRoom">{{ T['add_room'] }}</v-btn>
     </div>
 	</v-container>	
 </template>
@@ -21,13 +21,30 @@
     components: {
       Room
     },
-    data: ()=>({
-      rooms: [],
-    }),
+    props: ['lang'],
+    data(){
+      var translation =  {
+        EN: {
+          add_room: 'Add a room'
+        },
+        CN: {
+          add_room: '添加房間'
+        }
+      }
+      return {
+        rooms: [],
+        translation,
+      }
+    },
     mounted(){
       var vm = this
 
       vm.addRoom()
+    },
+    computed: {
+      T(){
+        return this.translation[this.lang]
+      }
     },
     methods: {
       addRoom(){

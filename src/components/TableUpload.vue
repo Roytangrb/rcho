@@ -50,6 +50,7 @@
 
 	export default {
 		name: 'TableUpload',
+    props: ['lang'],
 		data: () => ({
 			hint_file: "Only accepts .xlxs .csv",
 			templates: [

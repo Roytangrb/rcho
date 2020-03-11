@@ -1,15 +1,16 @@
-const Materials = [
-	/*
-	 * label: ['Material name'], value: ['factor A 極限散發係數']
-	 */
-	{ label: '實木複合地板', value: 1.55 },
-	{ label: '中密度纖維板', value: 1.65 },
-	{ label: '12厘夾板', value: 2.97 },
-	{ label: '乳膠漆', value: 1.28 },
-	{ label: '防潮石膏板', value: 0 },
-	{ label: '硬包布', value: 1.3 },
-	{ label: '橡木木飾板', value: 1.75 },
-	{ label: '硅藻泥', value: 0.41 },
+const materials = [
+	{	
+		id: 0,
+		name: '胶合板01',
+		levels: [
+			{ code: 'E0', level: '一级', rcho: 0.12, tvoc: 0.14},
+			{ code: 'E1', level: '二级', rcho: 0.32, tvoc: 0.48},
+			{ code: 'E2', level: '三级', rcho: 0.44, tvoc: 1.4},
+			{ code: 'E3', level: '四级', rcho: 0.5, tvoc: 2.08},
+		]
+	}
 ]
 
-export default Materials
+const U = 0.26 //综合折算系数
+
+export { materials, U }

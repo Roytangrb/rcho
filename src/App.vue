@@ -67,7 +67,7 @@ export default {
         manual: 'Manual',
       },
       CN: {
-        title: '醛微計算器',
+        title: '醛威計算器',
         upload: '讀取試算表',
         manual: '輸入計算'
       }

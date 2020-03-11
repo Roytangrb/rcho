@@ -6,15 +6,28 @@
     <template v-slot:activator>
       <v-list-item-title>
         <span>{{ T['room'] }}: {{ value.name || ' - ' }}</span>
-        <v-chip class="ma-2" color="primary" label v-if="!isNaN(getRoomC())">{{ T['concerntration'] }}: {{ format(getRoomC(), 4) }} mg/m²</v-chip>
-        <v-chip class="ma-2" label v-if="area">{{ T['area'] }} : {{ format(area) }} m²</v-chip>
-        <v-chip class="ma-2" label v-if="volume">{{ T['volume'] }}: {{ format(volume) }} m³</v-chip>
+        <v-chip class="ma-2" color="primary" label v-if="!isNaN(getRoomC())">{{ T['concerntration'] }}: {{ format(getRoomC(), 4) }} mg/m³</v-chip>
+        <v-chip class="ma-2 hidden-sm-and-down" label v-if="area">{{ T['area'] }} : {{ format(area) }} m²</v-chip>
+        <v-chip class="ma-2 hidden-sm-and-down" label v-if="volume">{{ T['volume'] }}: {{ format(volume) }} m³</v-chip>
       </v-list-item-title>
     </template>
 
     <v-list-item>
       <v-list-item-content>
-      	<div class="text-right">
+      	<div class="d-flex justify-space-between align-center">
+          <v-btn-toggle
+            v-model="calcType"
+            tile dense
+            color="accent-3"
+            mandatory group 
+          >
+            <v-btn value="rcho">
+              {{ T['rcho'] }}
+            </v-btn>
+            <v-btn value="tvoc">
+              {{ T['tvoc'] }}
+            </v-btn>
+          </v-btn-toggle>
       		<v-icon @click="delRoom">{{ icons.trash }}</v-icon>
       	</div>
         <v-form ref="room-form" v-model="room_valid">
@@ -90,10 +103,10 @@
 				<v-list-item-content>
 					<v-list-item-title>
             <span>{{ index+1 }} . </span>
-            <v-chip class="ma-2" label v-if="item.material_level">
+            <v-chip class="ma-2 hidden-sm-and-down" label v-if="item.material_level">
               {{ T[calcType] }}{{ T['emi_coef'] }}: {{ getFactor(item) }}mg/m²
             </v-chip>
-            <v-chip class="ma-2" label v-if="item.area">{{ T['share_ratio'] }}: {{ format(item.area / volume) }} m²/m³</v-chip>
+            <v-chip class="ma-2 hidden-sm-and-down" label v-if="item.area">{{ T['share_ratio'] }}: {{ format(item.area / volume) }} m²/m³</v-chip>
             <v-chip class="ma-2" label v-if="!isNaN(getMaterialC(item))">{{ T['concerntration'] }}: {{ format(getMaterialC(item), 4) }}mg/m³</v-chip>
           </v-list-item-title>
 					<v-row>
@@ -141,7 +154,7 @@
 
       <v-list-item>
         <v-list-item-content>
-          <div class="text-right">
+          <div class="d-flex justify-end">
             <v-btn rounded color="secondary" dark @click="addMaterial">{{ T['add_material'] }}</v-btn>
           </div>
         </v-list-item-content>
@@ -288,7 +301,7 @@
         if (!item_area && item_area !== 0){
           return NaN
         }
-        
+
         return Number(item_area) / this.volume
       },
       getMaterialC(item){

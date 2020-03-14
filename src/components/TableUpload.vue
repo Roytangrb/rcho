@@ -19,25 +19,40 @@
 					accept=".xlsx,.csv"
 					:disabled="!template"
 					@change="drop"
+					:value="file"
 				>
 				</v-file-input>
 
-				<div class="text-center mb-3">
-					<span class="or">Or</span>
-				</div>
-
-				<div 
-					class="drop-zone"
-					@drop.stop.prevent="drop"
-					@dragover.prevent="dragover"
+				<div class="drop-zone"
+					@drop.prevent.stop="drop"
+					@dragover.prevent="overlay = true"
+					@mouseleave="overlay = false"
 				>
-					<v-icon>{{ icons.import }}</v-icon>
-					<span>Drop a sheet file here...</span>
-				</div>
+					<div v-show="!overlay">
+						<v-icon>{{ icons.import }}</v-icon>
+						Drop a sheet file
+					</div>
 
+					<v-overlay
+	          absolute
+	          :value="overlay"
+	        >
+	        	<div v-if="!!template">
+	        		Upload
+	        	</div>
+	        	<div v-else>
+	        		Please select a template
+	        	</div>
+	        </v-overlay>
+				</div>
 			</v-col>
+			
 			<v-col cols="12" md="6">
-				
+	      <v-skeleton-loader
+	        :boilerplate="!processing"
+	        type="table"
+	        class="mx-auto"
+	      ></v-skeleton-loader>
 			</v-col>
 		</v-row>
 	</v-container>
@@ -58,6 +73,8 @@
 			],
 			template: null,
 			file: null,
+			overlay: false,
+			processing: false,
 
 			icons: {
 				import: mdiDatabaseImport,
@@ -67,6 +84,11 @@
 		methods: {
 			drop(e) {
 				var vm = this
+				console.log('dropped')
+
+				if (!vm.template || !e){
+					return 
+				}
 
 				console.log(e)
 				if (!e.dataTransfer || !e.dataTransfer.files) {
@@ -78,8 +100,14 @@
 					return 
 				}
 				vm.file = f
+				vm.processing = true
 
-				vm.readFile(f)
+				try {
+					vm.readFile(f)
+				} catch (err){
+					vm.reset()
+					console.log(err)
+				}
 			},
 			readFile(f){
 				var reader = new FileReader()
@@ -89,43 +117,27 @@
 					
 					/* DO SOMETHING WITH workbook HERE */
 					console.log(workbook)
-				};
-				reader.readAsArrayBuffer(f);
+				}
+				reader.readAsArrayBuffer(f)
 			},
-			dragover(e){
-				console.log(e)
+			reset(){
+				var vm = this
+				vm.processing = false
+				vm.file = null
 			}
 		}
 	}
 </script>
 
 <style scoped lang="less">
-	.or {
-		position: relative;
-		&::before, 
-		&::after{
-			content: "";
-			position: absolute;
-			top: 50%;
-			width: 200%;
-			border-bottom: 1px solid #ccc; 
-		}
-
-		&::before{
-			right: 130%;
-		}
-
-		&::after{
-			left: 130%;
-		}
-	}
-
 	.drop-zone{
+		position: relative;
 		width: 100%;
 		height: 300px;
 		border-radius: 5px;
 		border: 1px solid #ccc;
 		display: flex;
+		flex-direction: column;
 		justify-content: center;
 		align-items: center;
 		font: 20px;

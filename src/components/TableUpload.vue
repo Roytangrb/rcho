@@ -75,6 +75,7 @@
 			file: null,
 			overlay: false,
 			processing: false,
+			preview_data: null,
 
 			icons: {
 				import: mdiDatabaseImport,
@@ -98,7 +99,6 @@
 					return 
 				}
 				vm.file = f
-				vm.processing = true
 
 				try {
 					vm.readFile(f)
@@ -108,15 +108,49 @@
 				}
 			},
 			readFile(f){
+				var vm = this
+				vm.processing = true
+
 				var reader = new FileReader()
 				reader.onload = function(e) {
 					var data = new Uint8Array(e.target.result)
 					var workbook = XLSX.read(data, {type: 'array'})
 					
 					/* DO SOMETHING WITH workbook HERE */
-					console.log(workbook)
+					var first_sheet = vm.readFirstSheet(workbook)
+					vm.preview_data = vm.handleSheet(first_sheet)
+					console.log(vm.preview_data)
+					vm.processing = false
 				}
 				reader.readAsArrayBuffer(f)
+			},
+			readFirstSheet(workbook){
+				if (!workbook) return
+
+				// var vm = this
+				var has_sheet = workbook.SheetNames && workbook.SheetNames.length
+				if(has_sheet){
+					var first_sheet_name = workbook.SheetNames[0]
+					var first_sheet = workbook.Sheets[first_sheet_name]
+
+					return first_sheet
+				}
+
+				return null
+			},
+			handleSheet(sheet){
+				if (!sheet) return 
+
+				// var vm = this
+				var headings = []
+				var rows = XLSX.utils.sheet_to_json(sheet) || []
+				
+				if (rows.length){
+					var first = rows[0]
+					headings = Object.keys(first)
+				}
+
+				return { headings, rows }
 			},
 			reset(){
 				var vm = this

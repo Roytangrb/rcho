@@ -1,7 +1,7 @@
 <template>
 	<v-container>
 		<v-row>
-			<v-col cols="12" md="6">
+			<v-col cols="12" md="5">
 				<v-select
 					label="Template"
 					:items="templates"
@@ -46,11 +46,11 @@
 	        </v-overlay>
 				</div>
 			</v-col>
-			
-			<v-col cols="12" md="6">
+
+			<v-col cols="12" md="7">
 	      <v-skeleton-loader
 	        :boilerplate="!processing"
-	        type="table"
+	        type="table-heading, table-tbody, table-tfoot"
 	        class="mx-auto"
 	      ></v-skeleton-loader>
 			</v-col>
@@ -84,13 +84,11 @@
 		methods: {
 			drop(e) {
 				var vm = this
-				console.log('dropped')
 
 				if (!vm.template || !e){
 					return 
 				}
 
-				console.log(e)
 				if (!e.dataTransfer || !e.dataTransfer.files) {
 					return 
 				}

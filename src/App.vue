@@ -21,22 +21,22 @@
           v-model="curr_tab"
           centered
         >
-          <v-tab
-            v-for="tab in tabs"
-            :key="tab.id"
-          >
-            {{ T[tab.name] }}
+          <v-tab href="#upload" class="hidden-sm-and-down">
+            {{ T['upload'] }}
+          </v-tab>
+          <v-tab href="#manual">
+            {{ T['manual'] }}
           </v-tab>
         </v-tabs>
       </template>
     </v-app-bar>
 
     <v-content>
-      <v-tabs-items v-model="curr_tab">
-        <v-tab-item>
+      <v-tabs-items :value="curr_tab">
+        <v-tab-item value="upload">
           <TableUpload :lang="lang" />
         </v-tab-item>
-        <v-tab-item>
+        <v-tab-item value="manual">
           <Form :lang="lang" />
         </v-tab-item>
       </v-tabs-items>
@@ -74,11 +74,7 @@ export default {
     }
     return {
       lang: 'CN',
-      tabs: [
-        { id: 1, name: 'upload' },
-        { id: 2, name: 'manual' }
-      ],
-      curr_tab: 1,
+      curr_tab: 'manual',
       translation,
     }
   },

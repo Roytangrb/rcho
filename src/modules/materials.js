@@ -104,6 +104,92 @@ const materials = [
 	},
 ]
 
+/*
+* unit of area: m2
+*/
+const furnitures = [
+	{
+		id: 0,
+		name: '窗簾',
+		name_en: 'curtain',
+		default: {
+			unit_area: 10,
+		},
+		category: 'hard',
+		remark: '1 unit per window', //窗帘按照每窗 10 平米计算
+	},
+	{
+		id: 1,
+		name: '沙發',
+		name_en: 'sofa',
+		default: {
+			unit_area: 3,
+		},
+		category: 'soft',
+		remark: '1 unit per seat', //单人按 3 平米，双人按 6 平米...
+	},
+	{
+		id: 2,
+		name: '櫥櫃',
+		name_en: 'wardrobe',
+		default: {
+			unit_area: 2,
+		},
+		category: '',
+		remark: '1 unit per meter of width', //橱柜按照饰面木板类进行计算，按照宽度每米给出一个固定值计算(此固定 值暂定为 2 平米);(包括餐厅橱柜及客厅矮柜)
+	},
+	{
+		id: 3,
+		name: '衣櫃',
+		name_en: 'closet',
+		default: {
+			unit_area: 5,
+		},
+		category: '',
+		remark: '1 unit per meter of width', //衣柜按照饰面木板类或实木类计算，按照宽度每米给出一个固定值计算(暂 定为 5 平米)
+	},
+	{
+		id: 4,
+		name: '門',
+		name_en: 'door',
+		default: {
+			unit_area: 3,
+		},
+		category: '',
+		remark: '1 unit per door (two faces)', //门及门套按照 3 平米计算(每个门需要按照两面，每个房间计算一次)
+	},
+	{
+		id: 5,
+		name: '窗',
+		name_en: 'window',
+		default: {
+			unit_area: 2,
+		},
+		category: '',
+		remark: '1 unit per window set', //窗套按照 2 平米/窗计算
+	},
+	{
+		id: 6,
+		name: '餐桌',
+		name_en: 'table',
+		default: {
+			unit_area: 5,
+		},
+		category: '',
+		remark: '1 unit per dining table', //餐桌按照 5 平米/件计算
+	},
+	{
+		id: 7,
+		name: '餐椅',
+		name_en: 'chair',
+		default: {
+			unit_area: 2,
+		},
+		category: '',
+		remark: '1 unit per dining chair', //餐椅按照 2 平米/件计算
+	},
+]
+
 const U = 0.26 //综合折算系数
 
-export { materials, U }
+export { materials, U, furnitures }

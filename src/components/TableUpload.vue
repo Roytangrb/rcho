@@ -18,7 +18,7 @@
 					:prepend-icon="icons.excel"
 					accept=".xlsx,.csv"
 					:disabled="!template"
-					@change="drop"
+					@change="selectFile"
 					:value="file"
 				>
 				</v-file-input>
@@ -49,10 +49,17 @@
 
 			<v-col cols="12" md="7">
 	      <v-skeleton-loader
-	        :boilerplate="!processing"
+	        :loading="!has_data"
 	        type="table-heading, table-tbody, table-tfoot"
 	        class="mx-auto"
-	      ></v-skeleton-loader>
+	      >
+	      	<v-data-table
+				    :headers="preview_data.headers"
+				    :items="preview_data.items"
+				    :items-per-page="5"
+				    class="elevation-1"
+				  ></v-data-table>
+	      </v-skeleton-loader>
 			</v-col>
 		</v-row>
 
@@ -105,8 +112,11 @@
 			template: null,
 			file: null,
 			overlay: false,
-			processing: false,
-			preview_data: null,
+			has_data: false,
+			preview_data: {
+				headers: [],
+				items: [],
+			},
 			dialog: false,
 			prompt_title: '',
 			prompt_content: '',
@@ -117,30 +127,53 @@
 			}
 		}),
 		methods: {
+			selectFile(file){
+				var vm = this
+				
+				console.log('file picked')
+
+				if (!file){
+					return vm.reset()
+				}
+				
+				vm.file = file
+
+				try {
+					vm.readFile(file)
+				} catch (err){
+					vm.reset()
+					console.log(err)
+					vm.prompt('Error', 'Please try again.')
+				}
+			},
 			drop(e) {
 				var vm = this
 
+				console.log('file dropped')
+
 				if (!vm.template){
 					vm.prompt('Reminder', 'Please choose a template first.')
-					return 
+					return vm.reset()
 				}
 
 				if (!e){
-					return
+					return vm.reset()
 				}
 
 				if (!e.dataTransfer || !e.dataTransfer.files) {
-					return 
+					return vm.reset()
 				}
 				var files = e.dataTransfer.files
-				var f = files[0]
-				if (!f) {
-					return 
+				var file = files[0]
+
+				if (!file) {
+					return vm.reset()
 				}
-				vm.file = f
+
+				vm.file = file
 
 				try {
-					vm.readFile(f)
+					vm.readFile(file)
 				} catch (err){
 					vm.reset()
 					console.log(err)
@@ -149,7 +182,6 @@
 			},
 			readFile(f){
 				var vm = this
-				vm.processing = true
 
 				var reader = new FileReader()
 				reader.onload = function(e) {
@@ -157,23 +189,22 @@
 					var workbook = XLSX.read(data, {type: 'array'})
 					
 					/* DO SOMETHING WITH workbook HERE */
-					var first_sheet = vm.readFirstSheet(workbook)
+					var first_sheet = vm.readSheet(workbook)
 					vm.preview_data = vm.handleSheet(first_sheet)
-					console.log(vm.preview_data)
-					vm.processing = false
+					vm.has_data = true
 				}
 				reader.readAsArrayBuffer(f)
 			},
-			readFirstSheet(workbook){
+			readSheet(workbook, index=0){
 				if (!workbook) return
 
 				// var vm = this
-				var has_sheet = workbook.SheetNames && workbook.SheetNames.length
-				if(has_sheet){
-					var first_sheet_name = workbook.SheetNames[0]
-					var first_sheet = workbook.Sheets[first_sheet_name]
+				var sheet_names = workbook.SheetNames || []
+				var sheet_name = sheet_names[index]
+				if(sheet_name){
+					var sheet = workbook.Sheets[sheet_name]
 
-					return first_sheet
+					return sheet
 				}
 
 				return null
@@ -182,20 +213,27 @@
 				if (!sheet) return 
 
 				// var vm = this
-				var headings = []
-				var rows = XLSX.utils.sheet_to_json(sheet) || []
+				var headers = []
+				var items = XLSX.utils.sheet_to_json(sheet) || []
 				
-				if (rows.length){
-					var first = rows[0]
-					headings = Object.keys(first)
+				if (items.length){
+					var first = items[0]
+					headers = Object.keys(first)
+
+					//convert to v-data-table readable format
+					headers = headers.map(key => ({
+						text: key,
+						value: key,
+					}))
 				}
 
-				return { headings, rows }
+				return { headers, items }
 			},
 			reset(){
 				var vm = this
-				vm.processing = false
+				vm.has_data = false
 				vm.file = null
+				vm.overlay = false
 			},
 			prompt(title, content){
 				var vm = this

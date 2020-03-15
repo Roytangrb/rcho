@@ -55,6 +55,37 @@
 	      ></v-skeleton-loader>
 			</v-col>
 		</v-row>
+
+    <v-dialog
+      v-model="dialog"
+      width="500"
+    >
+      <v-card>
+        <v-card-title
+          class="headline grey lighten-2"
+          primary-title
+        >
+          {{ prompt_title }}
+        </v-card-title>
+
+        <v-card-text class="mt-2">
+          {{ prompt_content }}
+        </v-card-text>
+
+        <v-divider></v-divider>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="primary"
+            text
+            @click="dialog = false"
+          >
+            OK
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 	</v-container>
 </template>
 
@@ -76,6 +107,9 @@
 			overlay: false,
 			processing: false,
 			preview_data: null,
+			dialog: false,
+			prompt_title: '',
+			prompt_content: '',
 
 			icons: {
 				import: mdiDatabaseImport,
@@ -86,8 +120,13 @@
 			drop(e) {
 				var vm = this
 
-				if (!vm.template || !e){
+				if (!vm.template){
+					vm.prompt('Reminder', 'Please choose a template first.')
 					return 
+				}
+
+				if (!e){
+					return
 				}
 
 				if (!e.dataTransfer || !e.dataTransfer.files) {
@@ -105,6 +144,7 @@
 				} catch (err){
 					vm.reset()
 					console.log(err)
+					vm.prompt('Error', 'Please try again.')
 				}
 			},
 			readFile(f){
@@ -156,6 +196,13 @@
 				var vm = this
 				vm.processing = false
 				vm.file = null
+			},
+			prompt(title, content){
+				var vm = this
+
+				vm.dialog = true
+				vm.prompt_title = title
+				vm.prompt_content = content
 			}
 		}
 	}
